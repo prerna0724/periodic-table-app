@@ -20,7 +20,7 @@ An **interactive web dashboard** built with **Streamlit + Plotly** to explore th
 
 ---
 
-Built by **Prerna** while job hunting.  
+Built by **Prerna** while job hunting.
 Live demo: [Click here](#) *(will update after deploy)*
 
 #DataViz #Chemistry #Python #Streamlit
