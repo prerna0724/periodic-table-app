@@ -182,20 +182,13 @@ st.plotly_chart(fig4, use_container_width=True)
 # === 5. PCA CLUSTERS ===
 st.subheader("5. PCA Clusters (All 118 Elements)")
 
-# --- OPTIONAL INFO EXPANDER ---
-with st.expander("PCA Details (Explained Variance & Imputation)", expanded=False):
-    st.markdown(f"""
-    **Explained Variance:** {pca.explained_variance_ratio_.sum():.1%}  
-    → How much of the original data is captured in 2D.  
-    *(Higher = better clusters)*
-    
-    **Imputation:** Missing values filled with **median** (for PCA only).  
-    → Original data unchanged.
-    """)
-    st.caption("Click to hide")
-
 pca_features = ['Atomic Weight', 'Density', 'Melting Point', 'Boiling Point', 'Electronegativity']
 available_pca = [f for f in pca_features if f in df.columns]
+
+# --- DEFAULT VALUES ---
+explained_var = 0.0
+imputation_note = "Not computed"
+
 if len(available_pca) >= 2:
     pca_df = df[available_pca + ['Name', 'Symbol']].copy()
     imputer = SimpleImputer(strategy='median')
@@ -204,6 +197,9 @@ if len(available_pca) >= 2:
     scaled = scaler.fit_transform(imputed)
     pca = PCA(n_components=2)
     pca_comp = pca.fit_transform(scaled)
+    explained_var = pca.explained_variance_ratio_.sum()  # ← Capture here
+    imputation_note = "median (for PCA only)"
+    
     kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
     clusters = kmeans.fit_predict(pca_comp)
     result = pca_df.copy()
@@ -219,27 +215,40 @@ if len(available_pca) >= 2:
     )
     fig_pca.update_traces(marker=dict(size=10, opacity=0.8, line=dict(width=1, color='white')))
     
-# === ANNOTATION ===
-    fig_pca.add_annotation(
-        text=(
-            "<b>Explained Variance:</b> {:.1%}<br>"
-            "<b>Imputed with:</b> median (for PCA only)"
-        ).format(pca.explained_variance_ratio_.sum()),
-        xref="paper", yref="paper",
-        x=1.25, y=0.55,  # LOWER, below legend
-        xanchor="center",
-        showarrow=False,
-        font=dict(size=12, color="#1976D2"),
-        bgcolor="rgba(227,242,253,0.95)",
-        bordercolor="#90CAF9",
-        borderwidth=2,
-        borderpad=8,
-        align="center"
+    fig_pca.update_layout(
+        legend=dict(
+            title="Cluster",
+            orientation="v",
+            yanchor="top",
+            y=1.0,
+            xanchor="left",
+            x=1.02,
+            bgcolor="rgba(255,255,255,0.95)",
+            bordercolor="#ddd",
+            borderwidth=1,
+            font=dict(size=11)
+        ),
+        margin=dict(r=180, b=60),
+        height=650
     )
     
     st.plotly_chart(fig_pca, use_container_width=True)
 else:
     st.warning("Not enough data for PCA.")
+    explained_var = 0.0
+    imputation_note = "Not available"
+
+# --- EXPANDER AFTER PCA ---
+with st.expander("PCA Details (Explained Variance & Imputation)", expanded=False):
+    st.markdown(f"""
+    **Explained Variance:** {explained_var:.1%}  
+    → How much of the original data is captured in 2D.  
+    *(Higher = better clusters)*
+    
+    **Imputation:** Missing values filled with **{imputation_note}**.  
+    → Original data unchanged.
+    """)
+    st.caption("Click to hide")
     
 # === 6. FEATURE IMPORTANCE ===
 st.subheader("6. Feature Importance for Melting Point")
