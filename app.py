@@ -46,7 +46,7 @@ def load_data():
 df = load_data()
 
 # --- TITLE ---
-st.title("Baby Chemist's Periodic Table Explorer")
+st.title("Prerna's Periodic Table Explorer")
 st.sidebar.header("Controls")
 
 # --- SEARCH ---
