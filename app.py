@@ -213,7 +213,7 @@ if len(available_pca) >= 2:
             "<b>Imputed with:</b> median (for PCA only)"
         ).format(pca.explained_variance_ratio_.sum()),
         xref="paper", yref="paper",
-        x=1.25, y=0.7,  # Right of legend, mid-height
+        x=1.25, y=0.55,  # LOWER, below legend
         xanchor="center",
         showarrow=False,
         font=dict(size=12, color="#1976D2"),
