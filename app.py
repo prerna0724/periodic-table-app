@@ -97,7 +97,7 @@ if highlighted_atomic:
     h = density_df[density_df['Atomic Number'] == highlighted_atomic]
     if not h.empty:
         fig1.add_scatter(x=h['Atomic Number'], y=h['Density'], mode="markers+text",
-                         marker=dict(size=60, color="#FFFF00", line=dict(width=8, color="black")),
+                         marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
                          text=h['Symbol'], textposition="top center",
                          textfont=dict(size=22, color="black"), showlegend=False)
 fig1.update_layout(height=500)
@@ -112,7 +112,7 @@ if highlighted_atomic:
     h = weight_df[weight_df['Atomic Number'] == highlighted_atomic]
     if not h.empty:
         fig2.add_scatter(x=h['Atomic Number'], y=h['Atomic Weight'], mode="markers+text",
-                         marker=dict(size=60, color="#FFFF00", line=dict(width=8, color="black")),
+                         marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
                          text=h['Symbol'], textposition="middle right",
                          textfont=dict(size=22, color="black"), showlegend=False)
 fig2.update_layout(height=500)
@@ -212,7 +212,7 @@ if len(available_pca) >= 2:
         h = result[result['Symbol'] == sym]
         if not h.empty:
             fig_pca.add_scatter(x=h['PCA1'], y=h['PCA2'], mode="markers+text",
-                                marker=dict(size=70, color="#FFFF00", line=dict(width=10, color="black")),
+                                marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
                                 text=h['Symbol'], textposition="top center",
                                 textfont=dict(size=24, color="black"), showlegend=False)
     
