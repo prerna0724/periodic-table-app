@@ -181,7 +181,7 @@ st.plotly_chart(fig4, use_container_width=True)
 
 # === 5. PCA CLUSTERS ===
 st.subheader("5. PCA Clusters (All 118 Elements)")
-pca_features = ['Atomic Weight', 'Density', 'Melting Point', 'Boiling Point', 'Electronegativity']  # ← FIXED
+pca_features = ['Atomic Weight', 'Density', 'Melting Point', 'Boiling Point', 'Electronegativity']
 available_pca = [f for f in pca_features if f in df.columns]
 if len(available_pca) >= 2:
     pca_df = df[available_pca + ['Name', 'Symbol']].copy()
@@ -205,11 +205,27 @@ if len(available_pca) >= 2:
         color_discrete_sequence=px.colors.sequential.Plasma[1:8:2]
     )
     fig_pca.update_traces(marker=dict(size=10, opacity=0.8, line=dict(width=1, color='white')))
+    
+    # === CLEAN, BOXED ANNOTATION ===
     fig_pca.add_annotation(
-        text=f"Explained Variance: {pca.explained_variance_ratio_.sum():.1%}<br>Imputed with median",
-        xref="paper", yref="paper", x=0.5, y=-0.15, xanchor="center", showarrow=False
+        text=(
+            "<b>Explained Variance:</b> {:.1%}<br>"
+            "<b>Imputed with:</b> median (for PCA only)"
+        ).format(pca.explained_variance_ratio_.sum()),
+        xref="paper", yref="paper",
+        x=0.02, y=0.02,  # Bottom-left corner
+        showarrow=False,
+        font=dict(size=12, color="white"),
+        bgcolor="rgba(0,0,0,0.6)",
+        bordercolor="#333",
+        borderwidth=1,
+        borderpad=8,
+        align="left"
     )
+    
     st.plotly_chart(fig_pca, use_container_width=True)
+else:
+    st.warning("Not enough data for PCA.")
 
 # === 6. FEATURE IMPORTANCE ===
 st.subheader("6. Feature Importance for Melting Point")
