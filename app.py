@@ -162,6 +162,7 @@ st.plotly_chart(fig4, use_container_width=True)
 # === 5. PCA CLUSTERS ===
 st.subheader("5. PCA Clusters (All 118 Elements)")
 pca_features = ['Atomic Weight', 'Density', 'Melting Point', 'Boiling Point', 'Electronegativity']
+available_pca = [f for f in pca_features if f in df.columns]
 
 # --- DEFAULT VALUES ---
 explained_var = 0.0
