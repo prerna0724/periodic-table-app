@@ -1,4 +1,4 @@
-# 🧪 Baby Chemist's Periodic Table Explorer
+# 🧪 Prerna's Periodic Table Explorer
 
 An **interactive web dashboard** built with **Streamlit + Plotly** to explore the periodic table.
 
@@ -20,7 +20,7 @@ An **interactive web dashboard** built with **Streamlit + Plotly** to explore th
 
 ---
 
-Built by **Prerna** while job hunting.
-Live demo: [Click here](#) *(will update after deploy)*
+Built by **Prerna Lotlikar** while job hunting.
+Live demo: (https://periodic-table-app-i8apprfxgjp6prjmwpuynp.streamlit.app/#6-feature-importance-for-melting-point)
 
 #DataViz #Chemistry #Python #Streamlit
