@@ -206,27 +206,22 @@ if len(available_pca) >= 2:
     )
     fig_pca.update_traces(marker=dict(size=10, opacity=0.8, line=dict(width=1, color='white')))
     
-# === ANNOTATION OUTSIDE PLOT ===
+# === ANNOTATION ===
     fig_pca.add_annotation(
         text=(
             "<b>Explained Variance:</b> {:.1%}<br>"
             "<b>Imputed with:</b> median (for PCA only)"
         ).format(pca.explained_variance_ratio_.sum()),
         xref="paper", yref="paper",
-        x=0.5, y=-0.22,
+        x=1.25, y=0.7,  # Right of legend, mid-height
         xanchor="center",
         showarrow=False,
-        font=dict(size=13, color="#1976D2"),
+        font=dict(size=12, color="#1976D2"),
         bgcolor="rgba(227,242,253,0.95)",
         bordercolor="#90CAF9",
         borderwidth=2,
-        borderpad=10,
+        borderpad=8,
         align="center"
-    )
-    
-    # ADD BOTTOM MARGIN SO TEXT FITS
-    fig_pca.update_layout(
-        margin=dict(b=120)  # Extra space below
     )
     
     st.plotly_chart(fig_pca, use_container_width=True)
