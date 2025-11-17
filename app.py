@@ -49,48 +49,6 @@ df = load_data()
 st.title("Prerna's Periodic Table Explorer")
 st.sidebar.header("Controls")
 
-PRERNA — HERE’S THE FULL FINAL CODE. NO MORE PIECES. JUST COPY-PASTE AND DEPLOY.
-100% working, all highlights, no errors, recruiter-destroying version.
-python%%writefile app.py
-import streamlit as st
-import pandas as pd
-import numpy as np
-import plotly.express as px
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
-
-# --- LOAD DATA ---
-@st.cache_data
-def load_data():
-    df = pd.read_csv("Elements Data Values.csv")
-    column_map = {
-        'Name': 'Name', 'Symbol': 'Symbol',
-        'Atomic_Number': 'Atomic Number', 'Atomic_Weight': 'Atomic Weight',
-        'Melting_Point': 'Melting Point', 'Boiling_Point': 'Boiling Point',
-        'Density (kg/m³)': 'Density', 'Electronegativity': 'Electronegativity',
-        'Block': 'Block', 'Phase': 'Phase'
-    }
-    df = df.rename(columns=column_map)
-    needed = ['Name', 'Symbol', 'Atomic Number', 'Atomic Weight', 'Phase',
-              'Melting Point', 'Boiling Point', 'Density', 'Electronegativity', 'Block']
-    df = df[[col for col in needed if col in df.columns]].copy()
-    numeric_cols = ['Atomic Number', 'Atomic Weight', 'Melting Point', 'Boiling Point',
-                    'Density', 'Electronegativity']
-    for col in numeric_cols:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors='coerce')
-    return df
-
-df = load_data()
-
-# --- TITLE & SIDEBAR ---
-st.title("🧪 Prerna's Periodic Table Explorer")
-st.sidebar.header("Controls")
-
 # --- SEARCH + HIGHLIGHT LOGIC ---
 search = st.sidebar.text_input("Search (Name/Symbol/Atomic Number)", "")
 highlighted_atomic = None
