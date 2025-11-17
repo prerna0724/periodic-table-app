@@ -206,27 +206,24 @@ if len(available_pca) >= 2:
     )
     fig_pca.update_traces(marker=dict(size=10, opacity=0.8, line=dict(width=1, color='white')))
     
-    # === CLEAN, BOXED ANNOTATION ===
+        # === CLEAN ANNOTATION — OUTSIDE THE PLOT ===
     fig_pca.add_annotation(
         text=(
             "<b>Explained Variance:</b> {:.1%}<br>"
             "<b>Imputed with:</b> median (for PCA only)"
         ).format(pca.explained_variance_ratio_.sum()),
         xref="paper", yref="paper",
-        x=0.02, y=0.02,  # Bottom-left corner
+        x=0.5, y=-0.22,  # BELOW the plot
+        xanchor="center",
         showarrow=False,
-        font=dict(size=12, color="white"),
-        bgcolor="rgba(0,0,0,0.6)",
-        bordercolor="#333",
-        borderwidth=1,
-        borderpad=8,
-        align="left"
+        font=dict(size=13, color="#1976D2"),
+        bgcolor="rgba(227,242,253,0.95)",
+        bordercolor="#90CAF9",
+        borderwidth=2,
+        borderpad=10,
+        align="center"
     )
     
-    st.plotly_chart(fig_pca, use_container_width=True)
-else:
-    st.warning("Not enough data for PCA.")
-
 # === 6. FEATURE IMPORTANCE ===
 st.subheader("6. Feature Importance for Melting Point")
 ml_features = ['Atomic Weight', 'Density', 'Boiling Point', 'Electronegativity']  # ← FIXED
