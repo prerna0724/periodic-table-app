@@ -181,6 +181,19 @@ st.plotly_chart(fig4, use_container_width=True)
 
 # === 5. PCA CLUSTERS ===
 st.subheader("5. PCA Clusters (All 118 Elements)")
+
+# --- OPTIONAL INFO EXPANDER ---
+with st.expander("PCA Details (Explained Variance & Imputation)", expanded=False):
+    st.markdown(f"""
+    **Explained Variance:** {pca.explained_variance_ratio_.sum():.1%}  
+    → How much of the original data is captured in 2D.  
+    *(Higher = better clusters)*
+    
+    **Imputation:** Missing values filled with **median** (for PCA only).  
+    → Original data unchanged.
+    """)
+    st.caption("Click to hide")
+
 pca_features = ['Atomic Weight', 'Density', 'Melting Point', 'Boiling Point', 'Electronegativity']
 available_pca = [f for f in pca_features if f in df.columns]
 if len(available_pca) >= 2:
