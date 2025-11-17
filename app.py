@@ -162,37 +162,6 @@ st.plotly_chart(fig4, use_container_width=True)
 # === 5. PCA CLUSTERS ===
 st.subheader("5. PCA Clusters (All 118 Elements)")
 pca_features = ['Atomic Weight', 'Density', 'Melting Point', 'Boiling Point', 'Electronegativity']
-available_pca = [f for f in pca_features if f in df.columns]
-if len(available_pca) >= 2:
-    pca_df = df[available_pca + ['Name', 'Symbol']].copy()
-    imputer = SimpleImputer(strategy='median')
-    imputed = imputer.fit_transform(pca_df[available_pca])
-    scaler = StandardScaler()
-    scaled = scaler.fit_transform(imputed)
-    pca = PCA(n_components=2)
-    pca_comp = pca.fit_transform(scaled)
-    kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
-    clusters = kmeans.fit_predict(pca_comp)
-    result = pca_df.copy()
-    result['PCA1'], result['PCA2'] = pca_comp[:, 0], pca_comp[:, 1]
-    result['Cluster'] = clusters
-    cluster_names = {0: 'Light & Reactive', 1: 'Mid-Weight Metals', 2: 'Dense Transition', 3: 'Heavy & Superheavies'}
-    result['Cluster_Name'] = result['Cluster'].map(cluster_names)
-    fig_pca = px.scatter(result, x='PCA1', y='PCA2', color='Cluster_Name',
-                         hover_data=['Name', 'Symbol'] + available_pca,
-                         color_discrete_sequence=px.colors.sequential.Plasma[1:8:2])
-    fig_pca.update_traces(marker=dict(size=10, opacity=0.8, line=dict(width=1, color='white')))
-    if highlighted_atomic:
-        sym = df[df['Atomic Number'] == highlighted_atomic]['Symbol'].iloc[0]
-        h = result[result['Symbol'] == sym]
-        if not h.empty:
-            fig_pca.add_scatter(x=h['PCA1'], y=h['PCA2'], mode="markers+text", marker=dict(size=50, color="#FF073A", line=dict(width=6, color="white")),
-                                text=h['Symbol'], textposition="top center", textfont=dict(size=20, color="white"), showlegend=False)
-    fig_pca.update_layout(legend=dict(title="Cluster", orientation="v", yanchor="top", y=1.0, xanchor="left", x=1.02),
-                          margin=dict(r=180, b=60), height=650)
-    st.plotly_chart(fig_pca, use_container_width=True)
-else:
-    st.warning("Not enough data for PCA.")
 
 # --- DEFAULT VALUES ---
 explained_var = 0.0
