@@ -128,9 +128,11 @@ fig2.update_layout(height=500)
 st.plotly_chart(fig2, use_container_width=True)
 
 # === 3. INTERACTIVE HEATMAP WITH HIGHLIGHT ===
+# === 3. INTERACTIVE HEATMAP WITH HIGHLIGHT ===
 st.subheader("3. Periodic Table Heatmap")
 full_grid = pd.DataFrame(index=range(1,8), columns=range(1,19), dtype=float)
 annotations = []
+
 for _, r in plot_df.iterrows():
     val = r.get(prop, np.nan)
     p, g = int(r['Period']), int(r['Group'])
@@ -138,16 +140,30 @@ for _, r in plot_df.iterrows():
         full_grid.loc[p, g] = float(val)
     except:
         pass
+    
+    # FIXED: was "p-erin-1" → now "p-1"
     if highlighted_atomic and int(r['Atomic Number']) == highlighted_atomic:
-        annotations.append(dict(x=g-1, y=p-erin-1, text=r['Symbol'], font=dict(size=20, color="white"),
-                                showarrow=True, arrowhead=2, arrowsize=2, arrowwidth=3, arrowcolor="#FF073A",
-                                bgcolor="#FF073A", bordercolor="#FF073A"))
+        annotations.append(dict(
+            x=g-1, y=p-1, 
+            text=r['Symbol'], 
+            font=dict(size=20, color="white"),
+            showarrow=True, arrowhead=2, arrowsize=2, arrowwidth=3,
+            arrowcolor="#FF073A", bgcolor="#FF073A", bordercolor="#FF073A"
+        ))
 
-fig_heatmap = px.imshow(full_grid, text_auto=True, color_continuous_scale="Viridis", aspect="auto")
-fig_heatmap.update_layout(height=620, xaxis_title="Group (1–18)", yaxis_title="Period (1–7)",
-                          xaxis=dict(tickmode='linear', dtick=1), yaxis=dict(tickmode='linear', dtick=1))
+fig_heatmap = px.imshow(
+    full_grid, text_auto=True, color_continuous_scale="Viridis", aspect="auto"
+)
+fig_heatmap.update_layout(
+    height=620,
+    xaxis_title="Group (1–18)", yaxis_title="Period (1–7)",
+    xaxis=dict(tickmode='linear', dtick=1),
+    yaxis=dict(tickmode='linear', dtick=1),
+    margin=dict(l=60, r=60, t=50, b=50)
+)
 for ann in annotations:
     fig_heatmap.add_annotation(ann)
+
 st.plotly_chart(fig_heatmap, use_container_width=True)
 
 # === 4. PHASE DISTRIBUTION ===
