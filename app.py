@@ -133,7 +133,7 @@ if highlighted_atomic:
             mode="markers",  # ← no "+text" = no floating label
             marker=dict(size=50, color="#FFFF00", line=dict(width=5, color="black")),
             showlegend=False
-        )
+            )
             
 fig1.update_layout(height=500)
 st.plotly_chart(fig1, use_container_width=True)
@@ -148,8 +148,9 @@ if highlighted_atomic:
     if not h.empty:
         fig2.add_scatter(x=h['Atomic Number'], y=h['Atomic Weight'], mode="markers+text",
                          marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
-                        
-fig2.update_layout(height=500),
+                         showlegend=False
+                        )
+fig2.update_layout(height=500)
 st.plotly_chart(fig2, use_container_width=True)
 
 # === 3. INTERACTIVE HEATMAP ===
