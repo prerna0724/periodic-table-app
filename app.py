@@ -181,6 +181,7 @@ fig.update_layout(
         tickvals=[-1, -0.5, 0, 0.5, 1],
         ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
         len=0.7,
+        lenmode='fraction',
         thickness=20,
         x=1.02
     ),
