@@ -21,7 +21,7 @@ def load_data():
         'Melting_Point': 'Melting Point', 
         'Boiling_Point': 'Boiling Point',
         'Density (kg/m³)': 'Density', 
-        'Radioactivity': 'Radioactivity'
+        'Radioactivity': 'Radioactivity',
         'Electronegativity': 'Electronegativity',
         'Block': 'Block', 
         'Phase': 'Phase'
