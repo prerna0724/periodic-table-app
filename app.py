@@ -153,35 +153,70 @@ if highlighted_atomic:
 fig2.update_layout(height=500)
 st.plotly_chart(fig2, use_container_width=True)
 
-# === 3. INTERACTIVE HEATMAP ===
-st.subheader("3. Periodic Table Heatmap")
-full_grid = pd.DataFrame(index=range(1,8), columns=range(1,19), dtype=float)
-annotations = []
-for _, r in plot_df.iterrows():
-    val = r.get(prop, np.nan)
-    p, g = int(r['Period']), int(r['Group'])
-    try:
-        full_grid.loc[p, g] = float(val) if prop != 'Radioactivity' else val
-    except:
-        pass
-    if highlighted_atomic and int(r['Atomic Number']) == highlighted_atomic:
-        annotations.append(dict(x=g-1, y=p-1,
-                                showarrow=True, arrowhead=2, arrowsize=3, arrowwidth=4,
-                                arrowcolor="#FFFF00", bgcolor="#FFFF00", bordercolor="black", borderwidth=4))
+# === 3. CORRELATION HEATMAP OF ELEMENT PROPERTIES ===
+st.subheader("Correlation Heatmap of Numerical Properties")
 
-fig_heatmap = px.imshow(full_grid, text_auto=True, color_continuous_scale="Viridis", aspect="auto")
-fig_heatmap.update_layout(height=620, xaxis_title="Group (1–18)", yaxis_title="Period (1–7)",
-                          xaxis=dict(tickmode='linear', dtick=1), yaxis=dict(tickmode='linear', dtick=1))
-for ann in annotations:
-    fig_heatmap.add_annotation(ann)
-st.plotly_chart(fig_heatmap, use_container_width=True)
+# Use your actual dataframe name (df, not "elements")
+numeric_df = df.select_dtypes(include=[np.number])
+corr = numeric_df.corr()
 
-with st.expander("How does the Heatmap work? 🤔", expanded=False):
+fig = px.imshow(
+    corr,
+    text_auto=".2f",
+    color_continuous_scale="RdBu_r",
+    zmin=-1, zmax=1,
+    aspect="auto"
+)
+
+fig.update_traces(
+    hovertemplate="<b>%{x}</b> vs <b>%{y}</b><br>Correlation: <b>%{z:.3f}</b><extra></extra>"
+)
+
+fig.update_layout(
+    plot_bgcolor='white',
+    paper_bgcolor='white',
+    coloraxis_colorbar=dict(
+        title="Correlation (r)",
+        titleside="top",
+        tickvals=[-1, -0.5, 0, 0.5, 1],
+        ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
+        len=0.7,
+        thickness=20,
+        x=1.02
+    ),
+    title=dict(
+        text="<b>Correlation Heatmap of Element Properties</b>",
+        font=dict(size=22),
+        x=0.5, xanchor="center"
+    ),
+    margin=dict(t=100, b=140, l=100, r=180),
+    height=800
+)
+
+fig.add_annotation(
+    text="Hover for exact r-value | Diagonal = 1.0 (self-correlation)",
+    xref="paper", yref="paper",
+    x=0.5, y=-0.18, showarrow=False,
+    font=dict(size=12, color="#555")
+)
+
+fig.add_annotation(
+    text="★ = |r| ≥ 0.8 (strong correlation)",
+    xref="paper", yref="paper",
+    x=0.5, y=-0.22, showarrow=False,
+    font=dict(size=11, color="#D32F2F")
+)
+
+# THIS is the only line you need in Streamlit
+st.plotly_chart(fig, use_container_width=True)
+
+# Explanation below the plot (perfect order)
+with st.expander("How does the correlation heatmap work? 🤔", expanded=False):
     st.markdown("""
-    ### **Periodic Table Heatmap Explained**
-    - Rows = Periods, Columns = Groups
-    - Color = selected property (including Radioactivity!)
-    - Hover for details
+    - Shows how strongly different numerical properties are related  
+    - Red = strong positive correlation, Blue = strong negative  
+    - Diagonal is always 1.0 (property correlated with itself)  
+    - ★ marks very strong correlations (|r| ≥ 0.8)
     """)
 
 # === 4. PHASE DISTRIBUTION ===
