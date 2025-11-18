@@ -240,7 +240,7 @@ if len(available_pca) >= 2:
         if not h.empty:
             fig_pca.add_scatter(x=h['PCA1'], y=h['PCA2'], mode="markers+text",
                                 marker=dict(size=40, color="#FFFF00", line=dict(width=4, color="black"))
-                               
+                               )
     st.plotly_chart(fig_pca, use_container_width=True)
 
 with st.expander("PCA Details", expanded=False):
