@@ -127,8 +127,13 @@ fig1 = px.scatter(density_df, x='Atomic Number', y='Density', color='Phase', siz
 if highlighted_atomic:
     h = density_df[density_df['Atomic Number'] == highlighted_atomic]
     if not h.empty:
-        fig1.add_scatter(x=h['Atomic Number'], y=h['Density'], mode="markers+text",
-                         marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black"))
+        fig1.add_scatter(
+            x=h['Atomic Number'],
+            y=h['Density'],
+            mode="markers",  # ← no "+text" = no floating label
+            marker=dict(size=50, color="#FFFF00", line=dict(width=5, color="black")),
+            showlegend=False
+        )
             
 fig1.update_layout(height=500)
 st.plotly_chart(fig1, use_container_width=True)
