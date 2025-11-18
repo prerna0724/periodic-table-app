@@ -183,6 +183,7 @@ fig.update_layout(
         len=0.7,
         thickness=20,
         x=1.02,
+        yanchor="middle", # ← optional: centers it vertically if you want
         y=0.5
     ),
     title=dict(
