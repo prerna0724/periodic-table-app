@@ -149,7 +149,7 @@ if highlighted_atomic:
         fig2.add_scatter(x=h['Atomic Number'], y=h['Atomic Weight'], mode="markers+text",
                          marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
                         
-fig2.update_layout(height=500)
+fig2.update_layout(height=500),
 st.plotly_chart(fig2, use_container_width=True)
 
 # === 3. INTERACTIVE HEATMAP ===
