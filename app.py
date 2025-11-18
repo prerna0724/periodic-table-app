@@ -58,57 +58,46 @@ if search:
         el = result.iloc[0]
         highlighted_atomic = int(el['Atomic Number'])
 
-# === ELEMENT CARD WITH DYNAMIC RADIOACTIVITY DANGER BAR ===
+# === ELEMENT CARD – NOW WITH PROPER PRIMORDIAL SUPPORT ☢️ ===
         st.markdown("""
         <style>
             .big-font {font-size:28px!important;font-weight:bold;color:#1E90FF;}
             .element-card {
                 padding:25px;
-                border-left:14px solid transparent;  /* we control color via class below */
+                border-left:14px solid transparent;
                 background:#f0f8ff;
                 border-radius:15px;
                 margin:20px 0;
                 box-shadow:0 4px 15px rgba(0,0,0,0.1);
             }
             .property-label {font-weight:bold;color:#333;}
-            .radioactive-warning {color:#FF0000; font-weight:bold;}
-
-            /* ☢️ RADIOACTIVITY HAZARD LEVELS ☢️ */
-            .rad-0 {border-left-color: #00CCFF;} /* Safe & chill */
-            .rad-1 {border-left-color: #00FF99;} /* Natural spicy (U, Th) */
-            .rad-2 {border-left-color: #FFFF00;} /* Yellow caution (Pu, Am) */
-            .rad-3 {border-left-color: #FF8800;} /* Orange = bad idea */
-            .rad-4 {border-left-color: #FF0000;} /* Red = run */
+            .rad-stable {border-left-color: #00CCFF;}      /* Safe blue */
+            .rad-primordial {border-left-color: #00FF99;}   /* Natural green */
+            .rad-synthetic {border-left-color: #FF3333;}    /* Synthetic red */
         </style>
         """, unsafe_allow_html=True)
 
-        # Decide the danger level
         an = int(el['Atomic Number'])
-        if "No" in str(el['Radioactivity']):
-            rad_class = "rad-0"
-            warning = ""
-        elif an in [90, 92]:          # Thorium & Uranium
-            rad_class = "rad-1"
-            warning = "☢️ Naturally occurring (mildly spicy)"
-        elif an <= 94:                # Np, Pu
-            rad_class = "rad-2"
-            warning = "☢️ Synthetic – handle with care"
-        elif an <= 100:               # Up to Fm
-            rad_class = "rad-3"
-            warning = "☢️ Very radioactive"
-        else:                         # 101+ – basically glow-in-the-dark
-            rad_class = "rad-4"
-            warning = "☢️ EXTREMELY radioactive – exists for seconds"
+        rad_value = str(el['Radioactivity']).strip().lower()
 
-        # ONE single div with both classes = works perfectly
+        if rad_value == "no":
+            rad_class = "rad-stable"
+            warning = ""
+        elif rad_value == "primordial":
+            rad_class = "rad-primordial"
+            warning = "☢️ Primordial – occurs naturally (but still radioactive)"
+        else:  # "yes" = synthetic or negligible natural amount
+            rad_class = "rad-synthetic"
+            warning = "☢️ Radioactive – synthetic or trace only"
+
         st.markdown(f'<div class="element-card {rad_class}">', unsafe_allow_html=True)
         
         if warning:
-            st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']} <span class='radioactive-warning'>{warning}</span></p>", 
-                        unsafe_allow_html=True)
+            st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']} <span style='color:#FF0000;font-weight:bold;'>{warning}</span></p>", unsafe_allow_html=True)
         else:
             st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']}</p>", unsafe_allow_html=True)
 
+        # rest of the properties (unchanged)
         c1, c2 = st.columns(2)
         with c1:
             st.markdown(f"<span class='property-label'>Atomic Number:</span> {an}", unsafe_allow_html=True)
@@ -120,7 +109,7 @@ if search:
             st.markdown(f"<span class='property-label'>Boiling Point:</span> {el.get('Boiling Point','N/A')} K", unsafe_allow_html=True)
             st.markdown(f"<span class='property-label'>Density:</span> {el.get('Density','N/A')} kg/m³", unsafe_allow_html=True)
 
-        st.markdown('</div>', unsafe_allow_html=True)  # close the one and only card div
+        st.markdown('</div>', unsafe_allow_html=True)
 
 # --- HEATMAP PROPERTY ---
 prop = st.sidebar.selectbox("Color Heatmap by:", ['Density', 'Melting Point', 'Boiling Point', 'Radioactivity'], key="heatmap_prop")
