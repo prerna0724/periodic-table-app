@@ -129,8 +129,7 @@ if highlighted_atomic:
     if not h.empty:
         fig1.add_scatter(x=h['Atomic Number'], y=h['Density'], mode="markers+text",
                          marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
-                         text=h['Symbol'], textposition="top center",
-                         textfont=dict(size=22, color="black"), showlegend=False)
+            
 fig1.update_layout(height=500)
 st.plotly_chart(fig1, use_container_width=True)
 
@@ -144,8 +143,7 @@ if highlighted_atomic:
     if not h.empty:
         fig2.add_scatter(x=h['Atomic Number'], y=h['Atomic Weight'], mode="markers+text",
                          marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
-                         text=h['Symbol'], textposition="middle right",
-                         textfont=dict(size=22, color="black"), showlegend=False)
+                        
 fig2.update_layout(height=500)
 st.plotly_chart(fig2, use_container_width=True)
 
@@ -161,7 +159,7 @@ for _, r in plot_df.iterrows():
     except:
         pass
     if highlighted_atomic and int(r['Atomic Number']) == highlighted_atomic:
-        annotations.append(dict(x=g-1, y=p-1, text=r['Symbol'], font=dict(size=24, color="black"),
+        annotations.append(dict(x=g-1, y=p-1,
                                 showarrow=True, arrowhead=2, arrowsize=3, arrowwidth=4,
                                 arrowcolor="#FFFF00", bgcolor="#FFFF00", bordercolor="black", borderwidth=4))
 
@@ -236,8 +234,7 @@ if len(available_pca) >= 2:
         if not h.empty:
             fig_pca.add_scatter(x=h['PCA1'], y=h['PCA2'], mode="markers+text",
                                 marker=dict(size=40, color="#FFFF00", line=dict(width=4, color="black")),
-                                text=h['Symbol'], textposition="top center",
-                                textfont=dict(size=26, color="black"), showlegend=False)
+                               
     st.plotly_chart(fig_pca, use_container_width=True)
 
 with st.expander("PCA Details", expanded=False):
