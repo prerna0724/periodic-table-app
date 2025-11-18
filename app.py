@@ -19,7 +19,7 @@ def load_data():
         'Melting_Point': 'Melting Point', 'Boiling_Point': 'Boiling Point',
         'Density (kg/m³)': 'Density', 'Electronegativity': 'Electronegativity',
         'Block': 'Block', 'Phase': 'Phase',
-        'Radioactivity': 'Radioactivity'  # already correct
+        'Radioactivity': 'Radioactivity'
     }
     df = df.rename(columns=column_map)
     needed = ['Name', 'Symbol', 'Atomic Number', 'Atomic Weight', 'Phase',
