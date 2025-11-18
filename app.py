@@ -182,9 +182,7 @@ fig.update_layout(
         ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
         len=0.7,
         thickness=20,
-        x=1.02,
-        yanchor="middle", # ← optional: centers it vertically if you want
-        y=0.5
+        x=1.02
     ),
     title=dict(
         text="<b>Correlation Heatmap of Element Properties</b><br><sup>Hover for exact values • ★ marks |r| ≥ 0.8 strong correlation</sup>",
