@@ -147,7 +147,7 @@ if highlighted_atomic:
     h = weight_df[weight_df['Atomic Number'] == highlighted_atomic]
     if not h.empty:
         fig2.add_scatter(x=h['Atomic Number'], y=h['Atomic Weight'], mode="markers+text",
-                         marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black"))
+                         marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
                         
 fig2.update_layout(height=500)
 st.plotly_chart(fig2, use_container_width=True)
