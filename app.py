@@ -172,6 +172,7 @@ fig.update_traces(
     hovertemplate="<b>%{x}</b> vs <b>%{y}</b><br>Correlation: <b>%{z:.3f}</b><extra></extra>"
 )
 
+# === CORRECTED fig.update_layout BLOCK ===
 fig.update_layout(
     plot_bgcolor='white',
     paper_bgcolor='white',
@@ -181,25 +182,19 @@ fig.update_layout(
         tickvals=[-1, -0.5, 0, 0.5, 1],
         ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
         len=0.7,
-        lenmode='fraction',
+        lenmode='fraction', # <-- KEEP THIS FIX
         thickness=20,
         x=1.02
     ),
     title=dict(
-        text="<b>Correlation Heatmap of Element Properties</b><br><sup>Hover for exact values • ★ marks |r| ≥ 0.8 strong correlation</sup>",
+        # Use \n for line break instead of <br> and simplify the text
+        text="Correlation Heatmap of Element Properties\n(Hover for exact values • ★ marks |r| ≥ 0.8 strong correlation)",
         font=dict(size=22),
         x=0.5,
         xanchor="center"
     ),
     margin=dict(t=120, b=100, l=100, r=200),
     height=800
-)
-
-fig.add_annotation(
-    text="Hover for exact r-value | Diagonal = 1.0 (self-correlation)",
-    xref="paper", yref="paper",
-    x=0.5, y=-0.18, showarrow=False,
-    font=dict(size=12, color="#555")
 )
 
 fig.add_annotation(
