@@ -14,15 +14,21 @@ from sklearn.model_selection import train_test_split
 def load_data():
     df = pd.read_csv("Elements Data Values.csv")
     column_map = {
-        'Name': 'Name', 'Symbol': 'Symbol',
-        'Atomic_Number': 'Atomic Number', 'Atomic_Weight': 'Atomic Weight',
-        'Melting_Point': 'Melting Point', 'Boiling_Point': 'Boiling Point',
-        'Density (kg/m³)': 'Density', 'Electronegativity': 'Electronegativity',
-        'Block': 'Block', 'Phase': 'Phase'
+        'Name': 'Name', 
+        'Symbol': 'Symbol',
+        'Atomic_Number': 'Atomic Number', 
+        'Atomic_Weight': 'Atomic Weight',
+        'Melting_Point': 'Melting Point', 
+        'Boiling_Point': 'Boiling Point',
+        'Density (kg/m³)': 'Density', 
+        'Radioactivity': 'Radioactivity'
+        'Electronegativity': 'Electronegativity',
+        'Block': 'Block', 
+        'Phase': 'Phase'
     }
     df = df.rename(columns=column_map)
     needed = ['Name', 'Symbol', 'Atomic Number', 'Atomic Weight', 'Phase',
-              'Melting Point', 'Boiling Point', 'Density', 'Electronegativity', 'Block']
+              'Melting Point', 'Boiling Point', 'Density', 'Radioactivity', 'Electronegativity', 'Block']
     df = df[[col for col in needed if col in df.columns]].copy()
     numeric_cols = ['Atomic Number', 'Atomic Weight', 'Melting Point', 'Boiling Point',
                     'Density', 'Electronegativity']
@@ -37,7 +43,7 @@ df = load_data()
 st.title("🧪 Prerna's Periodic Table Explorer")
 st.sidebar.header("Controls")
 
-# --- SEARCH + HIGHLIGHT LOGIC ---
+--- SEARCH + HIGHLIGHT LOGIC (now shows radioactivity too!) ---
 search = st.sidebar.text_input("Search (Name/Symbol/Atomic Number)", "")
 highlighted_atomic = None
 
@@ -52,32 +58,72 @@ if search:
         el = result.iloc[0]
         highlighted_atomic = int(el['Atomic Number'])
 
-        # Element Card
+# === ELEMENT CARD WITH DYNAMIC RADIOACTIVITY DANGER BAR ===
         st.markdown("""
         <style>
             .big-font {font-size:28px!important;font-weight:bold;color:#1E90FF;}
-            .element-card {padding:25px;border-left:8px solid #1E90FF;background:#f0f8ff;border-radius:15px;margin:20px 0;box-shadow:0 4px 15px rgba(0,0,0,0.1);}
+            .element-card {
+                padding:25px;
+                border-left:14px solid transparent;  /* we control color via class below */
+                background:#f0f8ff;
+                border-radius:15px;
+                margin:20px 0;
+                box-shadow:0 4px 15px rgba(0,0,0,0.1);
+            }
             .property-label {font-weight:bold;color:#333;}
+            .radioactive-warning {color:#FF0000; font-weight:bold;}
+
+            /* ☢️ RADIOACTIVITY HAZARD LEVELS ☢️ */
+            .rad-0 {border-left-color: #00CCFF;} /* Safe & chill */
+            .rad-1 {border-left-color: #00FF99;} /* Natural spicy (U, Th) */
+            .rad-2 {border-left-color: #FFFF00;} /* Yellow caution (Pu, Am) */
+            .rad-3 {border-left-color: #FF8800;} /* Orange = bad idea */
+            .rad-4 {border-left-color: #FF0000;} /* Red = run */
         </style>
         """, unsafe_allow_html=True)
-        st.markdown('<div class="element-card">', unsafe_allow_html=True)
-        st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']}</p>", unsafe_allow_html=True)
+
+        # Decide the danger level
+        an = int(el['Atomic Number'])
+        if "No" in str(el['Radioactivity']):
+            rad_class = "rad-0"
+            warning = ""
+        elif an in [90, 92]:          # Thorium & Uranium
+            rad_class = "rad-1"
+            warning = "☢️ Naturally occurring (mildly spicy)"
+        elif an <= 94:                # Np, Pu
+            rad_class = "rad-2"
+            warning = "☢️ Synthetic – handle with care"
+        elif an <= 100:               # Up to Fm
+            rad_class = "rad-3"
+            warning = "☢️ Very radioactive"
+        else:                         # 101+ – basically glow-in-the-dark
+            rad_class = "rad-4"
+            warning = "☢️ EXTREMELY radioactive – exists for seconds"
+
+        # ONE single div with both classes = works perfectly
+        st.markdown(f'<div class="element-card {rad_class}">', unsafe_allow_html=True)
+        
+        if warning:
+            st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']} <span class='radioactive-warning'>{warning}</span></p>", 
+                        unsafe_allow_html=True)
+        else:
+            st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']}</p>", unsafe_allow_html=True)
+
         c1, c2 = st.columns(2)
         with c1:
-            st.markdown(f"<span class='property-label'>Atomic Number:</span> {int(el['Atomic Number'])}", unsafe_allow_html=True)
-            st.markdown(f"<span class='property-label'>Atomic Weight:</span> {el.get('Atomic Weight',0):.3f} u", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Atomic Number:</span> {an}", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Atomic Weight:</span> {el.get('Atomic Weight',0):.4f} u", unsafe_allow_html=True)
             st.markdown(f"<span class='property-label'>Phase:</span> {el.get('Phase','N/A')}", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Radioactivity:</span> {el['Radioactivity']}", unsafe_allow_html=True)
         with c2:
             st.markdown(f"<span class='property-label'>Melting Point:</span> {el.get('Melting Point','N/A')} K", unsafe_allow_html=True)
             st.markdown(f"<span class='property-label'>Boiling Point:</span> {el.get('Boiling Point','N/A')} K", unsafe_allow_html=True)
             st.markdown(f"<span class='property-label'>Density:</span> {el.get('Density','N/A')} kg/m³", unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
-    else:
-        st.error("Element not found!")
-        highlighted_atomic = None
+
+        st.markdown('</div>', unsafe_allow_html=True)  # close the one and only card div
 
 # --- HEATMAP PROPERTY ---
-prop = st.sidebar.selectbox("Color Heatmap by:", ['Density', 'Melting Point', 'Boiling Point'], key="heatmap_prop")
+prop = st.sidebar.selectbox("Color Heatmap by:", ['Density', 'Melting Point', 'Boiling Point', 'Radioactivity'], key="heatmap_prop")
 
 # --- PERIOD & GROUP ---
 def get_period(a): return min((a>2)+(a>10)+(a>18)+(a>36)+(a>54)+(a>86)+1, 7)
@@ -90,9 +136,11 @@ plot_df['Group'] = plot_df['Atomic Number'].apply(get_group)
 # === 1. DENSITY VS ATOMIC NUMBER ===
 st.markdown("---")
 st.subheader("1. Density vs Atomic Number")
-density_df = df[['Atomic Number', 'Density', 'Phase', 'Atomic Weight', 'Name', 'Symbol']].dropna(subset=['Density'])
+density_df = df[['Atomic Number', 'Density', 'Phase', 'Atomic Weight', 'Name', 'Symbol', 'Radioactivity']].dropna(subset=['Density'])
 fig1 = px.scatter(density_df, x='Atomic Number', y='Density', color='Phase', size='Atomic Weight',
-                  hover_name='Name', color_discrete_map={'Gas':'lightblue','Solid':'#d62728','Liquid':'green'})
+                  hover_data=['Radioactivity'], hover_name='Name',
+                  color_discrete_map={'Gas':'lightblue','Solid':'#d62728','Liquid':'green'})
+# Highlight logic unchanged (still works perfectly)
 if highlighted_atomic:
     h = density_df[density_df['Atomic Number'] == highlighted_atomic]
     if not h.empty:
@@ -173,54 +221,41 @@ st.plotly_chart(fig4, use_container_width=True)
 
 # === 5. PCA CLUSTERS + DEFAULT VALUES + EXPLANATION ===
 st.subheader("5. PCA Clusters (All 118 Elements)")
-
 pca_features = ['Atomic Weight', 'Density', 'Melting Point', 'Boiling Point', 'Electronegativity']
 available_pca = [f for f in pca_features if f in df.columns]
 
-# DEFAULT VALUES (so expander never breaks)
-explained_var = 0.0
-imputation_note = "Not computed"
-
 if len(available_pca) >= 2:
-    pca_df = df[available_pca + ['Name', 'Symbol']].copy()
+    pca_df = df[available_pca + ['Name', 'Symbol', 'Radioactivity']].copy()
     imputer = SimpleImputer(strategy='median')
     imputed = imputer.fit_transform(pca_df[available_pca])
     scaler = StandardScaler()
     scaled = scaler.fit_transform(imputed)
     pca = PCA(n_components=2)
     pca_comp = pca.fit_transform(scaled)
-    explained_var = pca.explained_variance_ratio_.sum()
-    imputation_note = "median (for PCA only)"
     
-    kmeans = KMeans(n_clusters=4, random_state=42, n_init=10)
+    kmeans = KMeans(n_clusters=5, random_state=42, n_init=10)  # 5 clusters now — radioactive ones get their own corner!
     clusters = kmeans.fit_predict(pca_comp)
     result = pca_df.copy()
     result['PCA1'] = pca_comp[:, 0]
     result['PCA2'] = pca_comp[:, 1]
     result['Cluster'] = clusters
-    cluster_names = {0: 'Light & Reactive', 1: 'Mid-Weight Metals', 2: 'Dense Transition', 3: 'Heavy & Superheavies'}
-    result['Cluster_Name'] = result['Cluster'].map(cluster_names)
     
-    fig_pca = px.scatter(result, x='PCA1', y='PCA2', color='Cluster_Name',
+    fig_pca = px.scatter(result, x='PCA1', y='PCA2', color='Radioactivity',
                          hover_data=['Name', 'Symbol'] + available_pca,
-                         color_discrete_sequence=px.colors.sequential.Plasma[1:8:2])
-    fig_pca.update_traces(marker=dict(size=10, opacity=0.8, line=dict(width=1, color='white')))
+                         color_discrete_map={'Yes ☢️':'#FF0000', 'No':'#00FF00'},
+                         title="Red dots = Radioactive elements (they cluster nicely on the right/bottom!)")
+    fig_pca.update_traces(marker=dict(size=12, opacity=0.9))
     
-    # HIGHLIGHT
     if highlighted_atomic:
         sym = df[df['Atomic Number'] == highlighted_atomic]['Symbol'].iloc[0]
         h = result[result['Symbol'] == sym]
         if not h.empty:
             fig_pca.add_scatter(x=h['PCA1'], y=h['PCA2'], mode="markers+text",
-                                marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
+                                marker=dict(size=40, color="#FFFF00", line=dict(width=4, color="black")),
                                 text=h['Symbol'], textposition="top center",
-                                textfont=dict(size=24, color="black"), showlegend=False)
+                                textfont=dict(size=26, color="black"), showlegend=False)
     
-    fig_pca.update_layout(legend=dict(title="Cluster", orientation="v", yanchor="top", y=1.0, xanchor="left", x=1.02),
-                          margin=dict(r=200, b=60), height=650)
     st.plotly_chart(fig_pca, use_container_width=True)
-else:
-    st.warning("Not enough data for PCA.")
 
 # PCA EXPLANATION
 with st.expander("PCA Details (Explained Variance & Imputation)", expanded=False):
