@@ -156,9 +156,25 @@ st.plotly_chart(fig2, use_container_width=True)
 # === 3. CORRELATION HEATMAP OF ELEMENT PROPERTIES ===
 st.subheader("Correlation Heatmap of Numerical Properties")
 
-# Use your actual dataframe name (df, not "elements")
-numeric_df = df.select_dtypes(include=[np.number])
-corr = numeric_df.corr()
+# Clean numeric columns that might have "Unknown" or garbage
+numeric_cols_for_corr = [
+    'Atomic Number', 'Atomic Weight', 'Density', 'Melting Point', 'Boiling Point',
+    'Electronegativity'  # add any others you have that should be numeric
+]
+
+for col in numeric_cols_for_corr:
+    if col in df.columns:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+
+# Replace inf with NaN and drop useless columns
+df.replace([np.inf, -np.inf], np.nan, inplace=True)
+corr_df = df[numeric_cols_for_corr].copy()
+corr_df.dropna(axis=1, how='all', inplace=True)
+
+if corr_df.shape[1] < 2:
+    st.warning("Not enough numeric data for correlation heatmap 😢")
+else:
+    corr = corr_df.corr()
 
 fig = px.imshow(
     corr,
@@ -172,7 +188,6 @@ fig.update_traces(
     hovertemplate="<b>%{x}</b> vs <b>%{y}</b><br>Correlation: <b>%{z:.3f}</b><extra></extra>"
 )
 
-# === CORRECTED fig.update_layout BLOCK ===
 fig.update_layout(
     plot_bgcolor='white',
     paper_bgcolor='white',
@@ -182,13 +197,12 @@ fig.update_layout(
         tickvals=[-1, -0.5, 0, 0.5, 1],
         ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
         len=0.7,
-        lenmode='fraction', # <-- KEEP THIS FIX
+        lenmode='fraction',  # ← THIS LINE IS THE HERO
         thickness=20,
         x=1.02
     ),
     title=dict(
-        # Use \n for line break instead of <br> and simplify the text
-        text="Correlation Heatmap of Element Properties\n(Hover for exact values • ★ marks |r| ≥ 0.8 strong correlation)",
+        text="<b>Correlation Heatmap of Element Properties</b><br><sup>Hover for exact values • ★ marks |r| ≥ 0.8 strong correlation</sup>",
         font=dict(size=22),
         x=0.5,
         xanchor="center"
@@ -204,7 +218,6 @@ fig.add_annotation(
     font=dict(size=11, color="#D32F2F")
 )
 
-# THIS is the only line you need in Streamlit
 st.plotly_chart(fig, use_container_width=True)
 
 # Explanation below the plot (perfect order)
