@@ -43,7 +43,7 @@ df = load_data()
 st.title("🧪 Prerna's Periodic Table Explorer")
 st.sidebar.header("Controls")
 
---- SEARCH + LOGIC - now shows radioactivity too! ---
+# --- SEARCH + HIGHLIGHT LOGIC (now with ☢️ radioactivity!) ---
 search = st.sidebar.text_input("Search (Name/Symbol/Atomic Number)", "")
 highlighted_atomic = None
 
