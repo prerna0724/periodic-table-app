@@ -249,18 +249,58 @@ with st.expander("How does the Heatmap work? 🤔", expanded=False):
     > **Pro Tip:** Change property → see trends pop!
     """)
 
-# === 4. PHASE DISTRIBUTION ===
-st.subheader("4. Phase Distribution")
-phase_counts = df['Phase'].value_counts().reset_index()
-phase_counts.columns = ['Phase', 'Count']
-fig4 = px.bar(phase_counts, x='Phase', y='Count', color='Phase',
-              color_discrete_map={'Solid':'#1f77b4','Gas':'#ff7f0e','Liquid':'#2ca02c'})
+# === 4. PHASE DISTRIBUTION (now with Radioactivity colors!) ===
+st.subheader("4. Phase Distribution of Elements (colored by Radioactivity ☢️)")
+
+phase_df = df[['Phase', 'Radioactivity', 'Name', 'Symbol']].dropna(subset=['Phase'])
+
+# Same color map we used everywhere else — consistency is king
+radio_color_map = {
+    'No': '#00CCFF',         # safe blue
+    'Primordial': '#00FF99', # green spicy
+    'Yes': '#FF3333'         # red danger
+}
+
+fig4 = px.histogram(
+    phase_df,
+    x='Phase',
+    color='Radioactivity',           # ← the main event
+    color_discrete_map=radio_color_map,
+    hover_data=['Name', 'Symbol'],    # still show name/symbol on hover
+    barnorm='',                       # regular count, not percent
+    title=None                        # we'll add manually for beauty
+)
+
+# Make bars thicker and prettier
+fig4.update_traces(marker_line_width=2, marker_line_color="white")
+
+# Highlight the searched element's phase with a fat yellow border
 if highlighted_atomic:
-    phase = df[df['Atomic Number'] == highlighted_atomic]['Phase'].iloc[0]
-    if phase in phase_counts['Phase'].values:
-        fig4.add_bar(x=[phase], y=[phase_counts[phase_counts['Phase']==phase]['Count'].iloc[0]],
-                     marker_color="#FFFF00", marker_line=dict(color="black", width=8), showlegend=False)
-fig4.update_layout(height=400, showlegend=False)
+    phase_of_highlight = df[df['Atomic Number'] == highlighted_atomic]['Phase'].iloc[0]
+    radio_of_highlight = df[df['Atomic Number'] == highlighted_atomic]['Radioactivity'].iloc[0]
+    
+    # Add a fake bar on top just for the highlight
+    fig4.add_bar(
+        x=[phase_of_highlight],
+        y=[phase_df[phase_df['Phase'] == phase_of_highlight].shape[0]],  # full height of that phase
+        marker_color=radio_color_map.get(radio_of_highlight, '#FF3333'),
+        marker_line=dict(color="#FFFF00", width=10),
+        name="Highlighted",
+        showlegend=False
+    )
+
+fig4.update_layout(
+    height=500,
+    bargap=0.2,
+    legend_title_text="Radioactivity Level",
+    plot_bgcolor="white",
+    title=dict(
+        text="<b>Phase Distribution by Radioactivity</b><br><sup>Hover bars for element details • Solids dominate everything (even the spicy ones)</sup>",
+        font=dict(size=18),
+        x=0.5, xanchor="center"
+    )
+)
+
 st.plotly_chart(fig4, use_container_width=True)
 
 # === 5. PCA CLUSTERS (now properly colored by No/Primordial/Yes) ===
