@@ -199,8 +199,8 @@ fig.update_layout(
     height=800
 )
 
-    # THIS is what actually shows the plot in Streamlit
-    st.plotly_chart(fig, use_container_width=True)
+# THIS is what actually shows the plot in Streamlit
+st.plotly_chart(fig, use_container_width=True)
 
 # === HEATMAP EXPLANATION ===
 with st.expander("How does the Heatmap work? 🤔", expanded=False):
