@@ -142,7 +142,7 @@ st.plotly_chart(fig1, use_container_width=True)
 st.subheader("2. Atomic Weight Distribution (now colored by Radioactivity ☢️)")
 
 # Drop NaN but keep Radioactivity (it's text, so safe)
-weight_df = df[['Atomic Number', 'Atomic Weight', 'Radioactivity', 'Block', 'Symbol']].dropna(subset=['Atomic Weight', 'Atomic Number'])
+weight_df = df[['Atomic Number', 'Atomic Weight', 'Radioactivity', 'Block', 'Name']].dropna(subset=['Atomic Weight', 'Atomic Number'])
 
 # Map radioactivity to nice colors
 radio_color_map = {
