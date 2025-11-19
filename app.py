@@ -199,14 +199,6 @@ fig.update_layout(
     height=800
 )
 
-    # Optional subtitle if you really want it below
-    fig.add_annotation(
-        text="★ = |r| ≥ 0.8 (strong correlation)",
-        xref="paper", yref="paper",
-        x=0.5, y=-0.18, showarrow=False,
-        font=dict(size=11, color="#D32F2F")
-    )
-
     # THIS is what actually shows the plot in Streamlit
     st.plotly_chart(fig, use_container_width=True)
 
