@@ -158,7 +158,7 @@ fig2 = px.scatter(
     color='Radioactivity',  # ← the star of the show now
     hover_data=['Block'],   # still show block on hover
     color_discrete_map=radio_color_map,
-    hover_name='Symbol'
+    hover_name='Name'
 )
 
 # Make the dots a bit bigger and prettier
