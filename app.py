@@ -153,80 +153,49 @@ if highlighted_atomic:
 fig2.update_layout(height=500)
 st.plotly_chart(fig2, use_container_width=True)
 
-# === 3. CORRELATION HEATMAP OF ELEMENT PROPERTIES ===
-st.subheader("Correlation Heatmap of Numerical Properties")
+# === 3. INTERACTIVE PERIODIC HEATMAP ===
+st.subheader("3. Periodic Table Heatmap")
 
-# Clean numeric columns that might have "Unknown" or garbage
-numeric_cols_for_corr = [
-    'Atomic Number', 'Atomic Weight', 'Density', 'Melting Point', 'Boiling Point',
-    'Electronegativity'  # add any others you have that should be numeric
-]
+full_grid = pd.DataFrame(index=range(1,8), columns=range(1,19), dtype=float)
+for _, r in plot_df.iterrows():
+    val = r.get(prop, np.nan)
+    try:
+        full_grid.loc[r['Period'], r['Group']] = float(val)
+    except:
+        pass
 
-for col in numeric_cols_for_corr:
-    if col in df.columns:
-        df[col] = pd.to_numeric(df[col], errors='coerce')
-
-# Replace inf with NaN and drop useless columns
-df.replace([np.inf, -np.inf], np.nan, inplace=True)
-corr_df = df[numeric_cols_for_corr].copy()
-corr_df.dropna(axis=1, how='all', inplace=True)
-
-if corr_df.shape[1] < 2:
-    st.warning("Not enough numeric data for correlation heatmap 😢")
-else:
-    corr = corr_df.corr()
-
-fig = px.imshow(
-    corr,
-    text_auto=".2f",
-    color_continuous_scale="RdBu_r",
-    zmin=-1, zmax=1,
-    aspect="auto"
+fig_heatmap = px.imshow(
+    full_grid,
+    text_auto=True,
+    color_continuous_scale="Viridis",
+    aspect="auto",
+    title=None
 )
-
-fig.update_traces(
-    hovertemplate="<b>%{x}</b> vs <b>%{y}</b><br>Correlation: <b>%{z:.3f}</b><extra></extra>"
+fig_heatmap.update_layout(
+    height=600,
+    margin=dict(l=50, r=50, t=80, b=50),
+    xaxis_title="Group (1–18)",
+    yaxis_title="Period (1–7)",
+    xaxis=dict(tickmode='linear', dtick=1),
+    yaxis=dict(tickmode='linear', dtick=1)
 )
+st.plotly_chart(fig_heatmap, use_container_width=True)
 
-fig.update_layout(
-    plot_bgcolor='white',
-    paper_bgcolor='white',
-    coloraxis_colorbar=dict(
-        title="Correlation (r)",
-        titleside="top",
-        tickvals=[-1, -0.5, 0, 0.5, 1],
-        ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
-        len=0.7,
-        lenmode='fraction',  # ← THIS LINE IS THE HERO
-        thickness=20,
-        x=1.02
-    ),
-    title=dict(
-        text="<b>Correlation Heatmap of Element Properties</b><br><sup>Hover for exact values • ★ marks |r| ≥ 0.8 strong correlation</sup>",
-        font=dict(size=22),
-        x=0.5,
-        xanchor="center"
-    ),
-    margin=dict(t=120, b=100, l=100, r=200),
-    height=800
-)
-
-fig.add_annotation(
-    text="★ = |r| ≥ 0.8 (strong correlation)",
-    xref="paper", yref="paper",
-    x=0.5, y=-0.22, showarrow=False,
-    font=dict(size=11, color="#D32F2F")
-)
-
-st.plotly_chart(fig, use_container_width=True)
-
-# Explanation below the plot (perfect order)
-with st.expander("How does the correlation heatmap work? 🤔", expanded=False):
+# === HEATMAP EXPLANATION ===
+with st.expander("How does the Heatmap work? 🤔", expanded=False):
     st.markdown("""
-    - Shows how strongly different numerical properties are related  
-    - Red = strong positive correlation, Blue = strong negative  
-    - Diagonal is always 1.0 (property correlated with itself)  
-    - ★ marks very strong correlations (|r| ≥ 0.8)
+    ### **Periodic Table Heatmap Explained**
+
+    - **Rows (Y-axis)** = **Periods** (1–7) → vertical layers
+    - **Columns (X-axis)** = **Groups** (1–18) → left to right
+    - **Each cell** = **one element** (e.g., Carbon = Period 6, Group 14)
+    - **Color** = **value of selected property**
+      - **Yellow/Green** = **High**
+      - **Purple** = **Low**
+    - **Hover** = exact value + element info
+    - **Missing cells** = no data or f-block (Lanthanides/Actinides not shown)
+
+    > **Pro Tip:** Change property → see trends pop!
     """)
 
 # === 4. PHASE DISTRIBUTION ===
