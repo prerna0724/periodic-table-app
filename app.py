@@ -154,32 +154,64 @@ fig2.update_layout(height=500)
 st.plotly_chart(fig2, use_container_width=True)
 
 # === 3. INTERACTIVE PERIODIC HEATMAP ===
-st.subheader("3. Periodic Table Heatmap")
+# === FINAL CORRELATION HEATMAP THAT ACTUALLY WORKS IN STREAMLIT ===
+st.subheader("Correlation Heatmap of Numerical Properties")
 
-full_grid = pd.DataFrame(index=range(1,8), columns=range(1,19), dtype=float)
-for _, r in plot_df.iterrows():
-    val = r.get(prop, np.nan)
-    try:
-        full_grid.loc[r['Period'], r['Group']] = float(val)
-    except:
-        pass
+# Use your existing df (don't reload the CSV again)
+numeric_df = df.select_dtypes(include=[np.number])
 
-fig_heatmap = px.imshow(
-    full_grid,
-    text_auto=True,
-    color_continuous_scale="Viridis",
-    aspect="auto",
-    title=None
-)
-fig_heatmap.update_layout(
-    height=600,
-    margin=dict(l=50, r=50, t=80, b=50),
-    xaxis_title="Group (1–18)",
-    yaxis_title="Period (1–7)",
-    xaxis=dict(tickmode='linear', dtick=1),
-    yaxis=dict(tickmode='linear', dtick=1)
-)
-st.plotly_chart(fig_heatmap, use_container_width=True)
+if numeric_df.shape[1] < 2:
+    st.warning("Not enough numeric columns for a correlation matrix 😭")
+else:
+    corr = numeric_df.corr()
+
+    fig = px.imshow(
+        corr,
+        text_auto=".2f",
+        color_continuous_scale="RdBu_r",
+        zmin=-1, zmax=1,
+        aspect="auto"
+    )
+
+    fig.update_traces(
+        hovertemplate="<b>%{x}</b> vs <b>%{y}</b><br>Correlation: <b>%{z:.3f}</b><extra></extra>"
+    )
+
+    # ONE AND ONLY update_layout – this is the magic version
+    fig.update_layout(
+        plot_bgcolor='white',
+        paper_bgcolor='white',
+        coloraxis_colorbar=dict(
+            title="Correlation (r)",
+            titleside="top",
+            tickvals=[-1, -0.5, 0, 0.5, 1],
+            ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
+            len=0.7,
+            lenmode='fraction',   # ← THIS LINE SAVES LIVES
+            thickness=20,
+            x=1.02
+            # NO y=0.5 HERE – IT'S ILLEGAL AND PLOTLY WILL MURDER YOU
+        ),
+        title=dict(
+            text="<b>Correlation Heatmap of Element Properties</b><br><sup>Hover for exact r • ★ = |r| ≥ 0.8 strong correlation</sup>",
+            font=dict(size=22),
+            x=0.5,
+            xanchor="center"
+        ),
+        margin=dict(t=120, b=100, l=100, r=200),
+        height=800
+    )
+
+    # Optional subtitle if you really want it below
+    fig.add_annotation(
+        text="★ = |r| ≥ 0.8 (strong correlation)",
+        xref="paper", yref="paper",
+        x=0.5, y=-0.18, showarrow=False,
+        font=dict(size=11, color="#D32F2F")
+    )
+
+    # THIS is what actually shows the plot in Streamlit
+    st.plotly_chart(fig, use_container_width=True)
 
 # === HEATMAP EXPLANATION ===
 with st.expander("How does the Heatmap work? 🤔", expanded=False):
