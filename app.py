@@ -156,7 +156,6 @@ st.plotly_chart(fig2, use_container_width=True)
 # === 3. INTERACTIVE PERIODIC HEATMAP ===
 st.subheader("Correlation Heatmap of Numerical Properties")
 
-# Use your existing df (don't reload the CSV again)
 numeric_df = df.select_dtypes(include=[np.number])
 
 if numeric_df.shape[1] < 2:
@@ -176,31 +175,31 @@ else:
         hovertemplate="<b>%{x}</b> vs <b>%{y}</b><br>Correlation: <b>%{z:.3f}</b><extra></extra>"
     )
 
-fig.update_layout(
-    plot_bgcolor='white',
-    paper_bgcolor='white',
-    coloraxis_colorbar=dict(
-        title="Correlation (r)",
-        titleside="top",
-        tickvals=[-1, -0.5, 0, 0.5, 1],
-        ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
-        len=0.7,
-        lenmode='fraction',
-        thickness=20
-    ),
-    coloraxis_colorbar_x=1.02,
-    title=dict(
-        text="<b>Correlation Heatmap of Element Properties</b><br><sup>Hover for exact r • ★ = |r| ≥ 0.8 strong correlation</sup>",
-        font=dict(size=22),
-        x=0.5,
-        xanchor="center"
-    ),
-    margin=dict(t=120, b=100, l=100, r=200),
-    height=800
-)
+    fig.update_layout(
+        plot_bgcolor='white',
+        paper_bgcolor='white',
+        coloraxis_colorbar=dict(
+            title="Correlation (r)",
+            titleside="top",
+            tickvals=[-1, -0.5, 0, 0.5, 1],
+            ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
+            len=0.7,
+            lenmode='fraction',
+            thickness=20
+        ),
+        coloraxis_colorbar_x=1.02,
+        title=dict(
+            text="<b>Correlation Heatmap of Element Properties</b><br><sup>Hover for exact r • ★ = |r| ≥ 0.8 strong correlation</sup>",
+            font=dict(size=22),
+            x=0.5,
+            xanchor="center"
+        ),
+        margin=dict(t=120, b=100, l=100, r=200),
+        height=800
+    )
 
-# THIS is what actually shows the plot in Streamlit
-st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, use_container_width=True)
+
 
 # === HEATMAP EXPLANATION ===
 with st.expander("How does the Heatmap work? 🤔", expanded=False):
