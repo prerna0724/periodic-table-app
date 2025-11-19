@@ -139,18 +139,49 @@ fig1.update_layout(height=500)
 st.plotly_chart(fig1, use_container_width=True)
 
 # === 2. ATOMIC WEIGHT VS BLOCK ===
-st.subheader("2. Atomic Weight Distribution (by Block)")
-weight_df = df[['Atomic Number', 'Atomic Weight', 'Block', 'Symbol']].dropna()
-fig2 = px.scatter(weight_df, x='Atomic Number', y='Atomic Weight', color='Block',
-                  color_discrete_map={'s': '#ff9999', 'p': '#66b3ff', 'd': '#99ff99', 'f': '#ffcc99'})
+st.subheader("2. Atomic Weight Distribution (now colored by Radioactivity ☢️)")
+
+# Drop NaN but keep Radioactivity (it's text, so safe)
+weight_df = df[['Atomic Number', 'Atomic Weight', 'Radioactivity', 'Block', 'Symbol']].dropna(subset=['Atomic Weight', 'Atomic Number'])
+
+# Map radioactivity to nice colors
+radio_color_map = {
+    'No': '#00CCFF',         # calm blue – safe
+    'Primordial': '#00FF99', # green – naturally spicy (U, Th)
+    'Yes': '#FF3333'         # angry red – synthetic chaos
+}
+
+fig2 = px.scatter(
+    weight_df, 
+    x='Atomic Number', 
+    y='Atomic Weight', 
+    color='Radioactivity',  # ← the star of the show now
+    hover_data=['Block'],   # still show block on hover
+    color_discrete_map=radio_color_map,
+    hover_name='Symbol'
+)
+
+# Make the dots a bit bigger and prettier
+fig2.update_traces(marker=dict(size=12, opacity=0.9, line=dict(width=1, color='white')))
+
+# Highlight the searched element with a fat yellow halo (no text, clean as hell)
 if highlighted_atomic:
     h = weight_df[weight_df['Atomic Number'] == highlighted_atomic]
     if not h.empty:
-        fig2.add_scatter(x=h['Atomic Number'], y=h['Atomic Weight'], mode="markers+text",
-                         marker=dict(size=30, color="#FFFF00", line=dict(width=3, color="black")),
-                         showlegend=False
-                        )
-fig2.update_layout(height=500)
+        fig2.add_scatter(
+            x=h['Atomic Number'],
+            y=h['Atomic Weight'],
+            mode="markers",
+            marker=dict(size=50, color="#FFFF00", line=dict(width=6, color="black")),
+            showlegend=False
+        )
+
+fig2.update_layout(
+    height=550,
+    legend_title_text="Radioactivity Level",
+    plot_bgcolor="white"
+)
+
 st.plotly_chart(fig2, use_container_width=True)
 
 # === 3. INTERACTIVE PERIODIC HEATMAP ===
@@ -195,7 +226,7 @@ else:
             xanchor="center"
         ),
         margin=dict(t=120, b=100, l=100, r=200),
-        height=800
+        height=550
     )
 
     st.plotly_chart(fig, use_container_width=True)
