@@ -181,7 +181,6 @@ else:
         paper_bgcolor="white",
         coloraxis_colorbar=dict(
             title="Correlation (r)",
-            titleside="top",
             tickvals=[-1, -0.5, 0, 0.5, 1],
             ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
             len=0.7,
