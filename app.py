@@ -176,30 +176,28 @@ else:
         hovertemplate="<b>%{x}</b> vs <b>%{y}</b><br>Correlation: <b>%{z:.3f}</b><extra></extra>"
     )
 
-    # ONE AND ONLY update_layout – this is the magic version
-    fig.update_layout(
-        plot_bgcolor='white',
-        paper_bgcolor='white',
-        coloraxis_colorbar=dict(
-            title="Correlation (r)",
-            titleside="top",
-            tickvals=[-1, -0.5, 0, 0.5, 1],
-            ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
-            len=0.7,
-            lenmode='fraction',   # ← THIS LINE SAVES LIVES
-            thickness=20,
-            x=1.02
-            # NO y=0.5 HERE – IT'S ILLEGAL AND PLOTLY WILL MURDER YOU
-        ),
-        title=dict(
-            text="<b>Correlation Heatmap of Element Properties</b><br><sup>Hover for exact r • ★ = |r| ≥ 0.8 strong correlation</sup>",
-            font=dict(size=22),
-            x=0.5,
-            xanchor="center"
-        ),
-        margin=dict(t=120, b=100, l=100, r=200),
-        height=800
-    )
+   fig.update_layout(
+    plot_bgcolor='white',
+    paper_bgcolor='white',
+    coloraxis_colorbar=dict(
+        title="Correlation (r)",
+        titleside="top",
+        tickvals=[-1, -0.5, 0, 0.5, 1],
+        ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
+        len=0.7,
+        lenmode='fraction',
+        thickness=20
+    ),
+    coloraxis_colorbar_x=1.02,
+    title=dict(
+        text="<b>Correlation Heatmap of Element Properties</b><br><sup>Hover for exact r • ★ = |r| ≥ 0.8 strong correlation</sup>",
+        font=dict(size=22),
+        x=0.5,
+        xanchor="center"
+    ),
+    margin=dict(t=120, b=100, l=100, r=200),
+    height=800
+)
 
     # Optional subtitle if you really want it below
     fig.add_annotation(
