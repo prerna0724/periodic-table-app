@@ -154,11 +154,10 @@ fig2.update_layout(height=500)
 st.plotly_chart(fig2, use_container_width=True)
 
 # === 3. INTERACTIVE PERIODIC HEATMAP ===
-# === FINAL CORRELATION HEATMAP THAT ACTUALLY WORKS IN STREAMLIT ===
 st.subheader("Correlation Heatmap of Numerical Properties")
 
 # Use your existing df (don't reload the CSV again)
-numeric_df = df.select_dtypes(include=[np.number])
+numeric_df = elements.select_dtypes(include=[np.number])
 
 if numeric_df.shape[1] < 2:
     st.warning("Not enough numeric columns for a correlation matrix 😭")
