@@ -176,7 +176,7 @@ else:
         hovertemplate="<b>%{x}</b> vs <b>%{y}</b><br>Correlation: <b>%{z:.3f}</b><extra></extra>"
     )
 
-   fig.update_layout(
+fig.update_layout(
     plot_bgcolor='white',
     paper_bgcolor='white',
     coloraxis_colorbar=dict(
