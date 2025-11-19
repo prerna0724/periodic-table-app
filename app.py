@@ -167,7 +167,8 @@ else:
         corr,
         text_auto=".2f",
         color_continuous_scale="RdBu_r",
-        zmin=-1, zmax=1,
+        zmin=-1,
+        zmax=1,
         aspect="auto"
     )
 
@@ -176,15 +177,15 @@ else:
     )
 
     fig.update_layout(
-        plot_bgcolor='white',
-        paper_bgcolor='white',
+        plot_bgcolor="white",
+        paper_bgcolor="white",
         coloraxis_colorbar=dict(
             title="Correlation (r)",
             titleside="top",
             tickvals=[-1, -0.5, 0, 0.5, 1],
             ticktext=["-1.0", "-0.5", "0.0", "+0.5", "+1.0"],
             len=0.7,
-            lenmode='fraction',
+            lenmode="fraction",
             thickness=20
         ),
         coloraxis_colorbar_x=1.02,
