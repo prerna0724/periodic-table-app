@@ -111,8 +111,11 @@ def get_period(a): return min((a>2)+(a>10)+(a>18)+(a>36)+(a>54)+(a>86)+1, 7)
 def get_group(a): return (a-1)%18 + 1
 
 st.markdown(
-    "<p style='font-size:16px; color:#6e6e6e;'>Open search bar in 'Controls'</p>",
+    "<p style='font-size:16px; color:#000000;'>Open search bar in Controls</p>",
     unsafe_allow_html=True
 )
 
-st.caption("Built by Prerna Lotlikar")
+st.markdown(
+    "<p style='font-size:14px; color:#000000;'>Built by Prerna Lotlikar</p>",
+    unsafe_allow_html=True
+)
