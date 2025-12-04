@@ -40,13 +40,12 @@ st.title("🧪 Prerna's Periodic Table Explorer")
 st.sidebar.header("Controls")
 
 # --- SEARCH + HIGHLIGHT LOGIC ---
-search = st.sidebar.text_input("Search (Name/Symbol/Atomic Number)", "")
+search = st.sidebar.text_input("Search (Name/Atomic Number)", "")
 highlighted_atomic = None
 
 if search:
     result = df[
         df['Name'].str.contains(search, case=False, na=False) |
-        df['Symbol'].str.contains(search, case=False, na=False) |
         df['Atomic Number'].astype(str).str.contains(search)
     ].head(1)
 
