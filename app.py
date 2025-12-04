@@ -106,15 +106,13 @@ if search:
 
         st.markdown('</div>', unsafe_allow_html=True)
 
-# --- HEATMAP PROPERTY ---
-prop = st.sidebar.selectbox("Color Heatmap by:", ['Density', 'Melting Point', 'Boiling Point', 'Radioactivity'], key="heatmap_prop")
-
 # --- PERIOD & GROUP ---
 def get_period(a): return min((a>2)+(a>10)+(a>18)+(a>36)+(a>54)+(a>86)+1, 7)
 def get_group(a): return (a-1)%18 + 1
 
-plot_df = df.copy()
-plot_df['Period'] = plot_df['Atomic Number'].apply(get_period)
-plot_df['Group'] = plot_df['Atomic Number'].apply(get_group)
+st.markdown(
+    "<p style='font-size:16px; color:#6e6e6e;'>Open search bar in 'Controls'</p>",
+    unsafe_allow_html=True
+)
 
 st.caption("Built by Prerna Lotlikar")
