@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-# --- LOAD & CLEAN DATA --- (same as before)
+# --- LOAD & CLEAN DATA --- (unchanged)
 @st.cache_data
 def load_data():
     df = pd.read_csv("Elements Data Values.csv")
@@ -26,95 +26,112 @@ def load_data():
 
 df = load_data()
 
-# --- SUBTLE NEON STYLING (toned down version) ---
+# --- CLEAN FUTURISTIC STYLING ---
 st.markdown("""
 <style>
-    /* Dark purple gradient with subtle background image */
+    /* Subtle dark space background */
     .stApp {
-        background: linear-gradient(135deg, #2a1a4f, #120528, #1a0033);
-        background-image: url('https://media.istockphoto.com/id/1151082661/vector/retro-sci-fi-background-futuristic-landscape-of-the-80s-digital-cyber-surface-suitable-for.jpg?s=612x612&w=0&k=20&c=4HbMZEmxF08zcS_NgSXDKBJXsWSZTAXRKuC1UNvlOQY=');
+        background-image: url('https://thumbs.dreamstime.com/b/glowing-particles-floating-space-dark-purple-gradient-background-low-contrast-minimal-glow-389369383.jpg');
         background-size: cover;
         background-attachment: fixed;
-        background-blend-mode: overlay;
+        background-position: center;
     }
     
-    /* Softer glowing title */
+    /* Clean white title */
     h1 {
         text-align: center;
-        font-size: 3.5rem !important;
-        color: #00e6e6 !important;
-        text-shadow: 0 0 8px #00ffff, 0 0 15px rgba(0, 255, 255, 0.4);
-        margin-bottom: 2rem !important;
+        font-size: 3.2rem !important;
+        color: #FFFFFF !important;
+        margin-bottom: 3rem !important;
+        font-weight: 600;
     }
     
-    /* Subtle search bar */
+    /* Frosted glass search bar with icon and soft glow */
     div[data-baseweb="input"] > div {
-        background: rgba(30, 20, 60, 0.6) !important;
-        border: 1px solid #00cccc !important;
-        border-radius: 30px !important;
-        box-shadow: 0 0 10px rgba(0, 255, 255, 0.3) !important;
-        backdrop-filter: blur(8px);
+        background: rgba(255, 255, 255, 0.1) !important;
+        border: none !important;
+        border-radius: 50px !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(12px);
+        padding-left: 20px;
     }
     input {
-        color: #e0ffff !important;
+        color: #FFFFFF !important;
         font-size: 1.2rem !important;
         text-align: center;
+        background: transparent !important;
     }
     ::placeholder {
-        color: #88dddd !important;
+        color: rgba(255, 255, 255, 0.7) !important;
+    }
+    /* Magnifying glass icon */
+    div[data-baseweb="input"]::before {
+        content: "🔍 ";
+        color: rgba(255, 255, 255, 0.8);
+        position: absolute;
+        left: 30px;
+        top: 50%;
+        transform: translateY(-50%);
     }
     
-    /* Gentle prompt text */
-    .neon-text {
+    /* Prompt text */
+    .prompt-text {
         text-align: center;
-        color: #00cccc;
-        text-shadow: 0 0 6px #00ffff;
+        color: #00FFFF;
         font-size: 1.3rem;
-        margin: 1.5rem 0;
+        margin: 2rem 0;
     }
     
-    /* Footer subtle */
+    /* Footer */
     .footer {
         text-align: center;
-        color: #bbbbbb;
+        color: #AAAAAA;
         font-size: 0.9rem;
-        margin-top: 3rem;
-        text-shadow: 0 0 4px #00cccc;
+        margin-top: 4rem;
     }
     
-    /* Element card - elegant and subdued */
+    /* Element card - clean and readable */
     .element-card {
-        background: rgba(20, 15, 50, 0.7) !important;
-        border-left: 8px solid transparent !important;
-        border-radius: 15px !important;
-        padding: 25px !important;
-        margin: 20px 0 !important;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.2) !important;
-        backdrop-filter: blur(6px);
+        background: rgba(20, 20, 50, 0.6) !important;
+        border-radius: 20px !important;
+        padding: 30px !important;
+        margin: 30px 0 !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(10px);
+        border-left: 8px solid transparent;
     }
     .big-font {
-        color: #00e6e6 !important;
-        text-shadow: 0 0 6px #00ffff;
+        color: #FFFFFF !important;
+        font-size: 2rem !important;
+        font-weight: bold;
+    }
+    .warning {
+        color: #FF6666 !important;
+        font-weight: bold;
     }
     .property-label {
-        color: #00cccc !important;
+        color: #00FFFF !important;
+        font-weight: bold;
     }
-    .rad-stable {border-left-color: #00cccc !important; box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);}
-    .rad-primordial {border-left-color: #00ffaa !important; box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);}
-    .rad-synthetic {border-left-color: #ff6666 !important; box-shadow: 0 0 10px rgba(255, 102, 102, 0.3);}
+    .property-value {
+        color: #FFFFFF !important;
+        font-size: 1.1rem;
+    }
+    .rad-stable {border-left-color: #00FFFF;}
+    .rad-primordial {border-left-color: #00FFAA;}
+    .rad-synthetic {border-left-color: #FF6666;}
 </style>
 """, unsafe_allow_html=True)
 
 # --- TITLE ---
 st.title("🧪 Prerna's Periodic Table Explorer")
 
-# --- SEARCH BAR (centered) ---
+# --- SEARCH BAR ---
 col1, col2, col3 = st.columns([1, 3, 1])
 with col2:
-    search = st.text_input("", placeholder="🔍 Search by Name or Atomic Number (e.g., Neon or 10)")
+    search = st.text_input("", placeholder="Search by Name or Atomic Number")
 
-# --- REST OF YOUR LOGIC (unchanged from last version) ---
-highlighted_atomic = None
+# --- ELEMENT DISPLAY LOGIC ---
 if search:
     result = df[
         df['Name'].str.contains(search, case=False, na=False) |
@@ -122,8 +139,6 @@ if search:
     ].head(1)
     if not result.empty:
         el = result.iloc[0]
-        highlighted_atomic = int(el['Atomic Number'])
-        
         an = int(el['Atomic Number'])
         rad_value = str(el['Radioactivity']).strip().lower()
         if rad_value == "no":
@@ -137,25 +152,27 @@ if search:
             warning = "☢️ Radioactive – synthetic or trace only"
         
         st.markdown(f'<div class="element-card {rad_class}">', unsafe_allow_html=True)
-        if warning:
-            st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']} <span style='color:#ff6666;text-shadow:0 0 6px #ff6666;font-weight:bold;'>{warning}</span></p>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']}</p>", unsafe_allow_html=True)
         
+        # Header with symbol, name, warning
+        warning_html = f'<span class="warning">{warning}</span>' if warning else ""
+        st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']} {warning_html}</p>", unsafe_allow_html=True)
+        
+        # Properties in two columns
         c1, c2 = st.columns(2)
         with c1:
-            st.markdown(f"<span class='property-label'>Atomic Number:</span> {an}", unsafe_allow_html=True)
-            st.markdown(f"<span class='property-label'>Atomic Weight:</span> {el.get('Atomic Weight',0):.4f} u", unsafe_allow_html=True)
-            st.markdown(f"<span class='property-label'>Phase:</span> {el.get('Phase','N/A')}", unsafe_allow_html=True)
-            st.markdown(f"<span class='property-label'>Radioactivity:</span> {el['Radioactivity']}", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Atomic Number:</span> <span class='property-value'>{an}</span>", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Atomic Weight:</span> <span class='property-value'>{el.get('Atomic Weight',0):.4f} u</span>", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Phase:</span> <span class='property-value'>{el.get('Phase','N/A')}</span>", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Radioactivity:</span> <span class='property-value'>{el['Radioactivity']}</span>", unsafe_allow_html=True)
         with c2:
-            st.markdown(f"<span class='property-label'>Melting Point:</span> {el.get('Melting Point','N/A')} K", unsafe_allow_html=True)
-            st.markdown(f"<span class='property-label'>Boiling Point:</span> {el.get('Boiling Point','N/A')} K", unsafe_allow_html=True)
-            st.markdown(f"<span class='property-label'>Density:</span> {el.get('Density','N/A')} kg/m³", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Melting Point:</span> <span class='property-value'>{el.get('Melting Point','N/A')} K</span>", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Boiling Point:</span> <span class='property-value'>{el.get('Boiling Point','N/A')} K</span>", unsafe_allow_html=True)
+            st.markdown(f"<span class='property-label'>Density:</span> <span class='property-value'>{el.get('Density','N/A')} kg/m³</span>", unsafe_allow_html=True)
+        
         st.markdown('</div>', unsafe_allow_html=True)
     else:
-        st.markdown("<p class='neon-text'>😔 No element found – try another search!</p>", unsafe_allow_html=True)
+        st.markdown("<p class='prompt-text'>😔 No element found – try another search!</p>", unsafe_allow_html=True)
 else:
-    st.markdown("<p class='neon-text'>🔍 Search for an element above to reveal its secrets!</p>", unsafe_allow_html=True)
+    st.markdown("<p class='prompt-text'>🔍 Search for an element above to see its details!</p>", unsafe_allow_html=True)
 
 st.markdown('<p class="footer">Built by Prerna Lotlikar.</p>', unsafe_allow_html=True)
