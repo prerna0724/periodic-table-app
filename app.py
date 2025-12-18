@@ -119,6 +119,11 @@ st.markdown("""
 # --- TITLE ---
 st.title("🧪 Prerna's Periodic Table Explorer")
 
+# --- SEARCH BAR ---
+col1, col2, col3 = st.columns([1, 3, 1])
+with col2:
+    search = st.text_input("", placeholder="", label_visibility="collapsed")
+
 # --- ELEMENT DISPLAY LOGIC ---
 if search:
     result = df[
