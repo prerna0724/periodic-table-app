@@ -78,7 +78,7 @@ st.markdown("""
     /* Footer */
     .footer {
         text-align: center;
-        color: #AAAAAA;
+        color: #FFFFFF;
         font-size: 0.9rem;
         margin-top: 4rem;
     }
@@ -107,7 +107,7 @@ st.markdown("""
         font-weight: bold;
     }
     .property-value {
-        color: #333333 !important;
+        color: #FFFFFF !important;
         font-size: 1.1rem;
     }
     .rad-stable {border-left-color: #00FFFF;}
