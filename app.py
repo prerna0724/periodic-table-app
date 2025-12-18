@@ -107,7 +107,7 @@ st.markdown("""
         font-weight: bold;
     }
     .property-value {
-        color: #FFFFFF !important;
+        color: #333333 !important;
         font-size: 1.1rem;
     }
     .rad-stable {border-left-color: #00FFFF;}
