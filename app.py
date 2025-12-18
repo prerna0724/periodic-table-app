@@ -29,12 +29,13 @@ df = load_data()
 # --- CLEAN FUTURISTIC STYLING ---
 st.markdown("""
 <style>
-    /* Subtle dark space background */
+    /* Dark purple gradient with subtle background image */
     .stApp {
-        background-image: url('https://www.freepik.com/free-vector/gradient-world-science-day-background_32201532.htm#fromView=keyword&page=1&position=0&uuid=53674f54-77b1-4dea-a1a8-58be1fddeff5&query=Chemistry+wallpaper');
+        background: linear-gradient(135deg, #2a1a4f, #120528, #1a0033);
+        background-image: url('https://media.istockphoto.com/id/1151082661/vector/retro-sci-fi-background-futuristic-landscape-of-the-80s-digital-cyber-surface-suitable-for.jpg?s=612x612&w=0&k=20&c=4HbMZEmxF08zcS_NgSXDKBJXsWSZTAXRKuC1UNvlOQY=');
         background-size: cover;
         background-attachment: fixed;
-        background-position: center;
+        background-blend-mode: overlay;
     }
     
     /* Clean white title */
@@ -56,10 +57,11 @@ st.markdown("""
         padding-left: 20px;
     }
     input {
-        color: #333333 !important;
+        color: #333333 !important;  /* ← THE BIG ONE: This is the fix – dark gray text when you type */
         font-size: 1.2rem !important;
         text-align: center;
         background: transparent !important;
+        font-weight: 500;
     }
     ::placeholder {
         color: rgba(255, 255, 255, 0.7) !important;
