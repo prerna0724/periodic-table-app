@@ -31,7 +31,7 @@ st.markdown("""
 <style>
     /* Subtle dark space background */
     .stApp {
-        background-image: url('https://thumbs.dreamstime.com/b/glowing-particles-floating-space-dark-purple-gradient-background-low-contrast-minimal-glow-389369383.jpg');
+        background-image: url('https://www.freepik.com/free-vector/gradient-world-science-day-background_32201532.htm#fromView=keyword&page=1&position=0&uuid=53674f54-77b1-4dea-a1a8-58be1fddeff5&query=Chemistry+wallpaper');
         background-size: cover;
         background-attachment: fixed;
         background-position: center;
@@ -56,7 +56,7 @@ st.markdown("""
         padding-left: 20px;
     }
     input {
-        color: #FFFFFF !important;
+        color: #333333 !important;
         font-size: 1.2rem !important;
         text-align: center;
         background: transparent !important;
