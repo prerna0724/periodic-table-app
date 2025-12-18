@@ -66,15 +66,6 @@ st.markdown("""
     ::placeholder {
         color: rgba(255, 255, 255, 0.7) !important;
     }
-    /* Magnifying glass icon */
-    div[data-baseweb="input"]::before {
-        content: "🔍 ";
-        color: rgba(255, 255, 255, 0.8);
-        position: absolute;
-        left: 30px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
     
     /* Prompt text */
     .prompt-text {
