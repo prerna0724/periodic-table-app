@@ -1,15 +1,7 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
-import plotly.express as px
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
-from sklearn.cluster import KMeans
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import train_test_split
 
-# --- LOAD & CLEAN DATA ---
+# --- LOAD & CLEAN DATA --- (unchanged)
 @st.cache_data
 def load_data():
     df = pd.read_csv("Elements Data Values.csv")
@@ -34,14 +26,90 @@ def load_data():
 
 df = load_data()
 
-# --- TITLE ---
-st.title("Prerna's Periodic Table Explorer")
+# --- NEON CYBERPUNK STYLING ---
+st.markdown("""
+<style>
+    /* Full dark background with gradient */
+    .stApp {
+        background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+        background-attachment: fixed;
+    }
+    
+    /* Neon glowing title */
+    h1 {
+        text-align: center;
+        font-size: 3.5rem !important;
+        color: #00FFFF !important;
+        text-shadow: 0 0 10px #00FFFF, 0 0 20px #00FFFF, 0 0 30px #00FFFF;
+        margin-bottom: 2rem !important;
+    }
+    
+    /* Neon search bar */
+    div[data-baseweb="input"] > div {
+        background: rgba(0, 0, 0, 0.4) !important;
+        border: 2px solid #00FFFF !important;
+        border-radius: 50px !important;
+        box-shadow: 0 0 15px #00FFFF !important;
+        backdrop-filter: blur(10px);
+    }
+    input {
+        color: #00FFFF !important;
+        font-size: 1.2rem !important;
+        text-align: center;
+    }
+    ::placeholder {
+        color: #00AAAA !important;
+        opacity: 1;
+    }
+    
+    /* Prompt text neon */
+    .neon-text {
+        text-align: center;
+        color: #00FFFF;
+        text-shadow: 0 0 10px #00FFFF;
+        font-size: 1.3rem;
+        margin: 1.5rem 0;
+    }
+    
+    /* Footer neon */
+    .footer {
+        text-align: center;
+        color: #AAAAAA;
+        font-size: 0.9rem;
+        margin-top: 3rem;
+        text-shadow: 0 0 5px #00FFFF;
+    }
+    
+    /* Element card - darker with neon glow */
+    .element-card {
+        background: rgba(20, 20, 40, 0.7) !important;
+        border-left: 14px solid transparent !important;
+        border-radius: 15px !important;
+        padding: 25px !important;
+        margin: 20px 0 !important;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.3) !important;
+        backdrop-filter: blur(5px);
+    }
+    .big-font {
+        color: #00FFFF !important;
+        text-shadow: 0 0 10px #00FFFF;
+    }
+    .property-label {
+        color: #00FFFF !important;
+    }
+    .rad-stable {border-left-color: #00FFFF !important; box-shadow: 0 0 15px #00FFFF;}
+    .rad-primordial {border-left-color: #00FF99 !important; box-shadow: 0 0 15px #00FF99;}
+    .rad-synthetic {border-left-color: #FF3333 !important; box-shadow: 0 0 15px #FF3333;}
+</style>
+""", unsafe_allow_html=True)
 
-# --- SEARCH + HIGHLIGHT LOGIC (NOW IN MAIN AREA) ---
-# Center the search bar a bit for better looks
-col1, col2, col3 = st.columns([1, 2, 1])
+# --- TITLE ---
+st.title("🧪 Prerna's Periodic Table Explorer")
+
+# --- SEARCH BAR (centered, wider for neon look) ---
+col1, col2, col3 = st.columns([1, 3, 1])
 with col2:
-    search = st.text_input("Search by Name or Atomic Number", placeholder="e.g., Hydrogen or 1", help="Type element name or number to highlight and show details")
+    search = st.text_input("", placeholder="🔍 Search by Name or Atomic Number (e.g., Neon or 10)")
 
 highlighted_atomic = None
 if search:
@@ -52,24 +120,7 @@ if search:
     if not result.empty:
         el = result.iloc[0]
         highlighted_atomic = int(el['Atomic Number'])
-        # === ELEMENT CARD WITH PRIMORDIAL SUPPORT === (your existing code here, unchanged)
-        st.markdown("""
-        <style>
-            .big-font {font-size:28px!important;font-weight:bold;color:#1E90FF;}
-            .element-card {
-                padding:25px;
-                border-left:14px solid transparent;
-                background:#f0f8ff;
-                border-radius:15px;
-                margin:20px 0;
-                box-shadow:0 4px 15px rgba(0,0,0,0.1);
-            }
-            .property-label {font-weight:bold;color:#333;}
-            .rad-stable {border-left-color: #00CCFF;}
-            .rad-primordial {border-left-color: #00FF99;}
-            .rad-synthetic {border-left-color: #FF3333;}
-        </style>
-        """, unsafe_allow_html=True)
+        
         an = int(el['Atomic Number'])
         rad_value = str(el['Radioactivity']).strip().lower()
         if rad_value == "no":
@@ -78,14 +129,16 @@ if search:
         elif rad_value == "primordial":
             rad_class = "rad-primordial"
             warning = "☢️ Primordial – occurs naturally (but still radioactive)"
-        else:  # "yes"
+        else:
             rad_class = "rad-synthetic"
             warning = "☢️ Radioactive – synthetic or trace only"
+        
         st.markdown(f'<div class="element-card {rad_class}">', unsafe_allow_html=True)
         if warning:
-            st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']} <span style='color:#FF0000;font-weight:bold;'>{warning}</span></p>", unsafe_allow_html=True)
+            st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']} <span style='color:#FF3333;text-shadow:0 0 10px #FF3333;font-weight:bold;'>{warning}</span></p>", unsafe_allow_html=True)
         else:
             st.markdown(f"<p class='big-font'>{el['Symbol']} – {el['Name']}</p>", unsafe_allow_html=True)
+        
         c1, c2 = st.columns(2)
         with c1:
             st.markdown(f"<span class='property-label'>Atomic Number:</span> {an}", unsafe_allow_html=True)
@@ -97,11 +150,9 @@ if search:
             st.markdown(f"<span class='property-label'>Boiling Point:</span> {el.get('Boiling Point','N/A')} K", unsafe_allow_html=True)
             st.markdown(f"<span class='property-label'>Density:</span> {el.get('Density','N/A')} kg/m³", unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
+    else:
+        st.markdown("<p class='neon-text'>😔 No element found – try another search!</p>", unsafe_allow_html=True)
+else:
+    st.markdown("<p class='neon-text'>🔍 Search for an element above to reveal its secrets!</p>", unsafe_allow_html=True)
 
-if not search:
-    st.markdown("<p style='font-size:18px; text-align:center; color:#555;'>🔍 Search for an element above to see its details!</p>", unsafe_allow_html=True)
-
-st.markdown(
-    "<p style='font-size:14px; color:#000000; text-align:center;'>Built by Prerna Lotlikar.</p>",
-    unsafe_allow_html=True
-)
+st.markdown('<p class="footer">Built by Prerna Lotlikar.</p>', unsafe_allow_html=True)
