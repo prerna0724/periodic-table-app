@@ -119,12 +119,6 @@ st.markdown("""
 # --- TITLE ---
 st.title("🧪 Prerna's Periodic Table Explorer")
 
-# --- SEARCH BAR ---
-col1, col2, col3 = st.columns([1, 3, 1])
-with col2:
-    st.markdown('<div style="position:relative;"><span class="search-icon">🔍</span></div>', unsafe_allow_html=True)
-    search = st.text_input("", placeholder="Search by Name or Atomic Number", label_visibility="collapsed")
-
 # --- ELEMENT DISPLAY LOGIC ---
 if search:
     result = df[
