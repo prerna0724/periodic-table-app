@@ -35,7 +35,7 @@ def load_data():
 df = load_data()
 
 # --- TITLE ---
-st.title("Prerna's Periodic Table Explorer")
+st.title("Prerna's Periodic Table Explorer 🧪")
 
 # --- SEARCH + HIGHLIGHT LOGIC (NOW IN MAIN AREA) ---
 # Center the search bar a bit for better looks
