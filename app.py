@@ -40,7 +40,9 @@ st.title("🧪 Prerna's Periodic Table Explorer")
 st.sidebar.header("Controls")
 
 # --- SEARCH + HIGHLIGHT LOGIC ---
-search = st.sidebar.text_input("Search (Name/Atomic Number)", "")
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    search = st.text_input("Search by Name or Atomic Number", placeholder="e.g., Hydrogen or 1", help="Type element name or number to highlight and show details")
 highlighted_atomic = None
 
 if search:
@@ -110,7 +112,7 @@ def get_period(a): return min((a>2)+(a>10)+(a>18)+(a>36)+(a>54)+(a>86)+1, 7)
 def get_group(a): return (a-1)%18 + 1
 
 st.markdown(
-    "<p style='font-size:16px; color:#000000;'>Open search bar in Controls.</p>",
+    "<p style='font-size:16px; color:#000000;'>Type Element Name or Atomic Number.</p>",
     unsafe_allow_html=True
 )
 
