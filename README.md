@@ -10,8 +10,6 @@ An **interactive web dashboard** built with **Streamlit + Plotly** to explore th
 - Python
 - Streamlit
 - Pandas
-- Seaborn + Matplotlib
-- Plotly
 
 ## Data
 `Elements Data Values.csv` from [Kaggle](https://www.kaggle.com/datasets)
