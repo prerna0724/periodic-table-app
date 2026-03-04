@@ -5,8 +5,6 @@ An **interactive web dashboard** built with **Streamlit + Plotly** to explore th
 ## Features
 - 🔍 **Search** by name, symbol, or atomic number
 - 🎨 **Styled element cards** with key properties
-- 🔥 **Heatmap** colored by Density, Electronegativity, or Melting Point
-- 📊 **Interactive Plotly scatter**: Density vs Atomic Number (hover for details)
 
 ## Tech Stack
 - Python
