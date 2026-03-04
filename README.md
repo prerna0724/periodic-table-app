@@ -19,4 +19,4 @@ An **interactive web dashboard** built with **Streamlit + Plotly** to explore th
 Built by **Prerna Lotlikar** while job hunting.
 Live demo: (https://periodic-table-app-i8apprfxgjp6prjmwpuynp.streamlit.app/#6-feature-importance-for-melting-point)
 
-#DataViz #Chemistry #Python #Streamlit
+#Chemistry #Python #Streamlit
